@@ -1,0 +1,93 @@
+services:
+#  pay-rabbitmq:
+#    platform: linux/arm64/v8
+#    image: rabbitmq:3-management
+#    container_name: pay-rabbitmq
+#    hostname: pay-rabbitmq
+#    restart: always
+#    tty: true
+#    ports:
+#      - "15672:15672"
+#      - "5672:5672"
+#    environment:
+#      ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+#      DEFAULT_USER: "guest"
+#      DEFAULT_PASS: "guest"
+#      DEFAULT_VHOST: "/"
+#    networks:
+#      - pay-network
+
+#  pay-redis:
+#    platform: linux/arm64/v8
+#    image: redis:latest
+#    container_name: pay-redis
+#    hostname: pay-redis
+#    restart: always
+#    tty: true
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      - pay-network
+
+  cake-mysql:
+    platform: linux/x86_64
+    image: mysql:8.0.23
+    container_name: cake-mysql
+    entrypoint: [ '/entrypoint.sh', '--default-authentication-plugin=mysql_native_password' ]
+    hostname: cake-mysql
+    restart: always
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: cake
+      MYSQL_USER: cake
+      MYSQL_PASSWORD: cake
+      MYSQL_ROOT_PASSWORD: root
+    command: [ "--log_bin_trust_function_creators=1" ]
+    networks:
+      - cake-network
+
+  cake-nginx:
+    platform: linux/arm64/v8
+    image: nginx:latest
+    container_name: webserver
+    hostname: webserver
+    restart: always
+    tty: true
+    depends_on:
+      - cake-services
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/srv/app
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+    networks:
+      - cake-network
+
+  cake-services:
+    container_name: cake-services
+    hostname: cake-services
+    build:
+      context: .
+      dockerfile: Dockerfile
+#      args:
+#        - WITH_XDEBUG=false
+#        - CI_ENV=dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/srv/app
+    depends_on:
+#      - pay-rabbitmq
+#      - pay-redis
+      - cake-mysql
+#    volumes:
+#      - .:/srv/app
+    working_dir: /srv/app
+    networks:
+      - cake-network
+
+networks:
+  cake-network:
