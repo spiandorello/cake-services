@@ -3,44 +3,63 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCakeRequest;
-use App\Models\Cake;
-use App\Repositories\CakeRepository\CakeRepositoryInterface;
+use App\Services\CakeServices;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CakeController extends Controller
 {
-    public function index(CakeRepositoryInterface $cakeRepository)
+    public function __construct(
+        private readonly CakeServices $cakeServices,
+    ) {}
+
+    public function index(Request $request): JsonResponse
     {
-        return $cakeRepository->all();
+        return response()->json(
+            data: $this->cakeServices->list(
+                queryParams: $request->query(),
+            ),
+        );
     }
 
-    public function store(StoreCakeRequest $request): Response
+    public function show(string $id): JsonResponse
     {
-        $validated = $request->validated();
+        $cake = $this->cakeServices->listOne($id);
 
-//                Cake::create([
-//            'name' => 'choclate',
-//            'description' => 'choclate',
-//            'weight' => 1000,
-//            'price' => 20.00,
-//            'available_quantity' => 20,
-//        ]);
+        return response()->json($cake);
     }
 
-    public function show($id): Response
+    public function store(StoreCakeRequest $request): JsonResponse
     {
+        $cake = $this->cakeServices
+            ->create($request->all());
+
+        return response()->json(
+            data: $cake,
+            status: Response::HTTP_CREATED
+        );
     }
 
-    public function edit($id): Response
+    public function update(Request $request, string $id): JsonResponse
     {
+        $cake = $this->cakeServices
+            ->edit(
+                id: $id,
+                cakeParams: $request->all(),
+            );
+
+        return response()->json(
+            data: $cake,
+            status: Response::HTTP_OK,
+        );
     }
 
-    public function update(Request $request, $id): Response
+    public function destroy(string $id): JsonResponse
     {
-    }
+        $this->cakeServices
+            ->delete(id: $id);
 
-    public function destroy($id): Response
-    {
+        return response()->json();
     }
 }

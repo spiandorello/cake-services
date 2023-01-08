@@ -9,7 +9,11 @@ class StoreCakeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|max:255',
+            'name' => 'required|max:255',
+            'description' => 'required|max:255',
+            'weight' => 'required',
+            'price' => 'required',
+            'available_quantity' => 'required',
         ];
     }
 }

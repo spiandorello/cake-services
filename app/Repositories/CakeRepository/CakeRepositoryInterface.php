@@ -4,6 +4,7 @@ namespace App\Repositories\CakeRepository;
 
 interface CakeRepositoryInterface
 {
-    public function all();
-//    public function store();
+    public function find(string $id);
+
+    public function list(array $params = []);
 }
