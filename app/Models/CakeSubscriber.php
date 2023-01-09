@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CakeSubscriber extends Model
 {
@@ -14,4 +15,14 @@ class CakeSubscriber extends Model
         'cake_id',
         'user_id',
     ];
+
+    public function user(): User
+    {
+        return $this->belongsTo(related: User::class)->getResults();
+    }
+
+    public function cake(): Cake
+    {
+        return $this->belongsTo(related: Cake::class)->getResults();
+    }
 }

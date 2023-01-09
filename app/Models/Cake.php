@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cake extends Model
 {
@@ -19,8 +19,8 @@ class Cake extends Model
         'available_quantity',
     ];
 
-    public function cakesSubscribers(): BelongsToMany
+    public function cakesSubscribers(): HasMany
     {
-        return $this->belongsToMany(CakeSubscriber::class);
+        return $this->hasMany(CakeSubscriber::class);
     }
 }
