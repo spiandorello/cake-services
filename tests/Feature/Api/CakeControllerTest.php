@@ -3,12 +3,15 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Cake;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 class CakeControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     const BASE_URI = '/api/cakes';
 
     public function test_index_cake_endpoint(): void

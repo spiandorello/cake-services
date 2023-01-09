@@ -6,4 +6,6 @@ use App\Http\Controllers\{CakeController, UserController, CakeSubscriberControll
 
 Route::resource(name: 'users', controller: UserController::class);
 Route::resource(name: 'cakes', controller: CakeController::class);
-Route::resource(name: 'cakes-subscriber', controller: CakeSubscriberController::class);
+
+Route::post(uri: 'cakes-subscriber/{userId}/{cakeId}', action: [CakeSubscriberController::class, 'subscribe']);
+Route::delete(uri: 'cakes-subscriber/{userId}/{cakeId}', action: [CakeSubscriberController::class, 'unsubscribe']);
