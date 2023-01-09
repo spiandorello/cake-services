@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class AbstractRepository
@@ -20,8 +19,18 @@ class AbstractRepository
         return app($model);
     }
 
-    public function all(): Collection
+    private function getModel(): Model
     {
-        return $this->model->all();
+        return $this->model;
+    }
+
+    public function find(string $id)
+    {
+        return $this->getModel()::findOrFail($id);
+    }
+
+    public function create(array $params)
+    {
+        return $this->getModel()::create($params);
     }
 }

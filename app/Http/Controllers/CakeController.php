@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCakeRequest;
-use App\Services\CakeServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+
+use App\Services\CakeServices;
+use App\Http\Requests\StoreCakeRequest;
+use App\Http\Requests\UpdateCakeRequest;
 
 class CakeController extends Controller
 {
@@ -16,8 +18,8 @@ class CakeController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return response()->json(
-            data: $this->cakeServices->list(
+        return $this->jsonResponse(
+            content: $this->cakeServices->list(
                 queryParams: $request->query(),
             ),
         );
@@ -27,7 +29,9 @@ class CakeController extends Controller
     {
         $cake = $this->cakeServices->listOne($id);
 
-        return response()->json($cake);
+        return $this->jsonResponse(
+            content: $cake->toArray(),
+        );
     }
 
     public function store(StoreCakeRequest $request): JsonResponse
@@ -35,13 +39,13 @@ class CakeController extends Controller
         $cake = $this->cakeServices
             ->create($request->all());
 
-        return response()->json(
-            data: $cake,
-            status: Response::HTTP_CREATED
+        return $this->jsonResponse(
+            content: $cake->toArray(),
+            statusCode: Response::HTTP_CREATED,
         );
     }
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(UpdateCakeRequest $request, string $id): JsonResponse
     {
         $cake = $this->cakeServices
             ->edit(
@@ -49,9 +53,8 @@ class CakeController extends Controller
                 cakeParams: $request->all(),
             );
 
-        return response()->json(
-            data: $cake,
-            status: Response::HTTP_OK,
+        return $this->jsonResponse(
+            content: $cake->toArray(),
         );
     }
 
@@ -60,6 +63,8 @@ class CakeController extends Controller
         $this->cakeServices
             ->delete(id: $id);
 
-        return response()->json();
+        return $this->jsonResponse(
+            statusCode: Response::HTTP_NO_CONTENT,
+        );
     }
 }

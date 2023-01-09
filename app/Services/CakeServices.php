@@ -27,7 +27,8 @@ class CakeServices
 
     public function create(array $cakeParams): Cake
     {
-        return Cake::create($cakeParams);
+        return $this->cakeRepository
+            ->create($cakeParams);
     }
 
     public function edit(string $id, array $cakeParams): Cake

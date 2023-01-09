@@ -7,4 +7,6 @@ interface CakeRepositoryInterface
     public function find(string $id);
 
     public function list(array $params = []);
+
+    public function create(array $params);
 }

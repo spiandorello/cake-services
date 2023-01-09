@@ -2,40 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCakeRequest;
-use App\Models\Cake;
-use App\Models\User;
-use App\Repositories\CakeRepository\CakeRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+use App\Services\UserServices;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    public function index()
+    public function __construct(
+        private readonly UserServices $userServices,
+    ) {}
+
+    public function index(Request $request): JsonResponse
     {
-        User::create([
-            'name' => 'dudu',
-            'email'=> 'dudu@mailinator.com',
-        ]);
+        return $this->jsonResponse(
+          content: $this->userServices
+              ->list(
+                  queryParams: $request->all(),
+              ),
+        );
     }
 
-    public function store(): Response
+    public function store(StoreUserRequest $request): JsonResponse
     {
+        $user = $this->userServices
+            ->create(
+                userParams: $request->all(),
+            );
+
+        return $this->jsonResponse(
+            content: $user->toArray(),
+            statusCode: Response::HTTP_CREATED,
+        );
     }
 
-    public function show($id): Response
+    public function show(string $id): JsonResponse
     {
+        $user = $this->userServices
+            ->listOne($id);
+
+        return $this->jsonResponse(
+            content: $user->toArray(),
+        );
     }
 
-    public function edit($id): Response
+    public function update(UpdateUserRequest $request, string $id): JsonResponse
     {
+        $cake = $this->userServices
+            ->edit(
+                id: $id,
+                userParams: $request->all(),
+            );
+
+        return $this->jsonResponse(
+            content: $cake->toArray(),
+        );
     }
 
-    public function update(Request $request, $id): Response
+    public function destroy(string $id): JsonResponse
     {
-    }
+        $this->userServices
+            ->delete(id: $id);
 
-    public function destroy($id): Response
-    {
+        return $this->jsonResponse(
+            statusCode: Response::HTTP_NO_CONTENT,
+        );
     }
 }

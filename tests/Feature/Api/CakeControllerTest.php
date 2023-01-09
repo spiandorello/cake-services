@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Api;
 
-use Illuminate\Testing\Fluent\AssertableJson;
+use App\Models\Cake;
 use Tests\TestCase;
 use Illuminate\Http\Response;
+use Illuminate\Testing\Fluent\AssertableJson;
 
 class CakeControllerTest extends TestCase
 {
@@ -12,6 +13,8 @@ class CakeControllerTest extends TestCase
 
     public function test_index_cake_endpoint(): void
     {
+        Cake::factory(10)->create();
+
         $response = $this->getJson(uri: self::BASE_URI);
 
         $response->assertStatus(status: Response::HTTP_OK);
@@ -46,33 +49,47 @@ class CakeControllerTest extends TestCase
 
     public function test_show_cake_endpoint(): void
     {
-        $response = $this->getJson(uri: self::BASE_URI . '/982cd9cc-fed0-4c12-b2df-db024187250');
+        $cake = Cake::factory(1)->createOne();
+
+        $response = $this->getJson(uri: self::BASE_URI . '/' . $cake['id']);
 
         $response->assertStatus(status: Response::HTTP_OK);
 
         $response
-            ->assertJson(fn(AssertableJson $json) => $json
-                ->hasAll([
-                    'id',
-                    'name',
-                    'description',
-                    'weight',
-                    'price',
-                    'available_quantity',
-                    'created_at',
-                    'updated_at',
-                ])
-            );
+            ->assertJson(function (AssertableJson $json) use ($cake) {
+                $json
+                    ->hasAll([
+                        'id',
+                        'name',
+                        'description',
+                        'weight',
+                        'price',
+                        'available_quantity',
+                        'created_at',
+                        'updated_at',
+                    ]);
+
+                $json
+                    ->whereAll([
+                        'id' => $cake['id'],
+                        'name' => $cake['name'],
+                        'description' => $cake['description'],
+                        'weight' => $cake['weight'],
+                        'price' => $cake['price'],
+                        'available_quantity' => $cake['available_quantity'],
+                    ])->etc();
+            }
+        );
     }
 
     public function test_store_cake_endpoint(): void
     {
         $createCakeRequestParams = [
-            'name' => 'Chocolate',
-            'description' => 'An delicious chocolate`s cake',
-            'weight' => 200,
-            'price' => 20.00,
-            'available_quantity' => 10,
+            'name' => fake()->text(25),
+            'description' => fake()->text(100),
+            'weight' => fake()->numberBetween(1, 1000),
+            'price' => fake()->numberBetween(1, 100),
+            'available_quantity' => fake()->numberBetween(1, 100),
         ];
 
         $response = $this->post(uri: self::BASE_URI, data: $createCakeRequestParams);
@@ -82,23 +99,27 @@ class CakeControllerTest extends TestCase
 
     public function test_update_cake_endpoint(): void
     {
+        $cake = Cake::factory(1)->createOne();
+
         $createCakeRequestParams = [
-            'name' => 'Chocolate',
-            'description' => 'An delicious chocolate`s cake',
-            'weight' => 200,
-            'price' => 20.00,
-            'available_quantity' => 10,
+            'name' => fake()->text(25),
+            'description' => fake()->text(100),
+            'weight' => fake()->numberBetween(1, 1000),
+            'price' => fake()->numberBetween(1, 100),
+            'available_quantity' => fake()->numberBetween(1, 100),
         ];
 
-        $response = $this->put(uri: self::BASE_URI . '/982cdd3b-510e-4d0d-a9ca-34d76e5d933a', data: $createCakeRequestParams);
+        $response = $this->put(uri: self::BASE_URI . '/' . $cake['id'], data: $createCakeRequestParams);
 
         $response->assertStatus(status: Response::HTTP_OK);
     }
 
     public function test_delete_cake_endpoint(): void
     {
-        $response = $this->delete(uri: self::BASE_URI . '/982cdd3b-510e-4d0d-a9ca-34d76e5d933a');
+        $cake = Cake::factory(1)->createOne();
 
-        $response->assertStatus(status: Response::HTTP_OK);
+        $response = $this->delete(uri: self::BASE_URI . '/' . $cake['id']);
+
+        $response->assertStatus(status: Response::HTTP_NO_CONTENT);
     }
 }

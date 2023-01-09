@@ -13,11 +13,6 @@ class CakeRepository extends AbstractRepository implements CakeRepositoryInterfa
         parent::__construct(Cake::class);
     }
 
-    public function find(string $id)
-    {
-        return Cake::findOrFail($id);
-    }
-
     public function list(array $params = []): Builder
     {
         $queryBuilder = Cake::query();
