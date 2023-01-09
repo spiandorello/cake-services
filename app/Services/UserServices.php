@@ -24,7 +24,7 @@ class UserServices
         $user = $this->userRepository
             ->find($id);
 
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             throw new UserNotFoundException();
         }
 

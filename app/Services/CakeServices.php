@@ -25,7 +25,7 @@ class CakeServices
         $cake = $this->cakeRepository
             ->find($id);
 
-        if (!$cake instanceof Cake) {
+        if (! $cake instanceof Cake) {
             throw new CakeNotFoundException();
         }
 
