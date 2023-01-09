@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exceptions\CakeSubscriber\CakeUserAlreadySubscribedException;
 use App\Models\Cake;
 use App\Models\CakeSubscriber;
 use App\Models\User;
@@ -14,8 +15,6 @@ use Tests\TestCase;
 
 class CakeSubscriberServicesTest extends TestCase
 {
-    private readonly CakeSubscriberServices $cakeSubscriberServices;
-
     public function test_cake_subscribe(): void
     {
         $cakeSubscriber = CakeSubscriber::factory()->make();
@@ -56,6 +55,47 @@ class CakeSubscriberServicesTest extends TestCase
             $cakeServicesMock,
             $cakeSubscriberRepositoryMock,
         );
+
+        $cakeSubscriberServices->subscribe(
+            userId: $user->id,
+            cakeId: $cake->id,
+        );
+    }
+
+    public function test_cake_subscribe_already_subscribed(): void
+    {
+        $cakeSubscriber = CakeSubscriber::factory()->make();
+
+        $user = User::factory()->make();
+        $user->id = (Str::uuid())->toString();
+
+        $cake = Cake::factory()->make();
+        $cake->id = (Str::uuid())->toString();
+
+        $cakeServicesMock = \Mockery::mock(CakeServices::class);
+        $cakeServicesMock->shouldReceive('listOne')
+            ->once()
+            ->with($cake->id)
+            ->andReturn($cake);
+
+        $userServicesMock = \Mockery::mock(UserServices::class);
+        $userServicesMock->shouldReceive('listOne')
+            ->once()
+            ->with($user->id)
+            ->andReturn($user);
+
+        $cakeSubscriberRepositoryMock = \Mockery::mock(CakeSubscriberRepositoryInterface::class);
+        $cakeSubscriberRepositoryMock->shouldReceive('findBy')
+            ->once()
+            ->andReturn($cakeSubscriber);
+
+        $cakeSubscriberServices = new CakeSubscriberServices(
+            $userServicesMock,
+            $cakeServicesMock,
+            $cakeSubscriberRepositoryMock,
+        );
+
+        $this->expectException(CakeUserAlreadySubscribedException::class);
 
         $cakeSubscriberServices->subscribe(
             userId: $user->id,

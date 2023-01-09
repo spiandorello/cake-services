@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\Cake\CakeNotFoundException;
 use App\Models\Cake;
 use App\Repositories\CakeRepository\CakeRepositoryInterface;
 use Illuminate\Pagination\AbstractPaginator;
@@ -21,8 +22,14 @@ class CakeServices
 
     public function listOne(string $id): Cake
     {
-        return $this->cakeRepository
+        $cake = $this->cakeRepository
             ->find($id);
+
+        if (!$cake instanceof Cake) {
+            throw new CakeNotFoundException();
+        }
+
+        return $cake;
     }
 
     public function create(array $cakeParams): Cake

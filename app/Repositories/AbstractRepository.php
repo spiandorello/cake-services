@@ -26,7 +26,7 @@ class AbstractRepository
 
     public function find(string $id)
     {
-        return $this->getModel()::findOrFail($id);
+        return $this->getModel()::find($id);
     }
 
     public function findBy(array $params)

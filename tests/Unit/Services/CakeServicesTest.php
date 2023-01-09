@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exceptions\Cake\CakeNotFoundException;
 use App\Models\Cake;
 use App\Repositories\CakeRepository\CakeRepositoryInterface;
 use App\Services\CakeServices;
@@ -28,6 +29,25 @@ class CakeServicesTest extends TestCase
         );
 
         $this->cakeServices->listOne($cake->id);
+    }
+
+    public function test_list_one_cake_not_found(): void
+    {
+        $id = (Str::uuid())->toString();
+
+        $cakeRepositoryMock = \Mockery::mock(CakeRepositoryInterface::class);
+        $cakeRepositoryMock->shouldReceive('find')
+            ->once()
+            ->with($id)
+            ->andReturn(null);
+
+        $this->cakeServices = new CakeServices(
+            $cakeRepositoryMock
+        );
+
+        $this->expectException(CakeNotFoundException::class);
+
+        $this->cakeServices->listOne($id);
     }
 
     public function test_list_all_cake(): void

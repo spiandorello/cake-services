@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
 use App\Repositories\UserRepository\UserRepositoryInterface;
 use App\Services\UserServices;
@@ -28,6 +29,25 @@ class UserServicesTest extends TestCase
         );
 
         $this->userServices->listOne($user->id);
+    }
+
+    public function test_list_one_user_not_found(): void
+    {
+        $id = (Str::uuid())->toString();
+
+        $userRepositoryMock = \Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('find')
+            ->once()
+            ->with($id)
+            ->andReturn(null);
+
+        $this->userServices = new UserServices(
+            $userRepositoryMock
+        );
+
+        $this->expectException(UserNotFoundException::class);
+
+        $this->userServices->listOne($id);
     }
 
     public function test_list_all_user(): void

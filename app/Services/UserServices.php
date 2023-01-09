@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
 use App\Repositories\UserRepository\UserRepositoryInterface;
 
@@ -20,8 +21,14 @@ class UserServices
 
     public function listOne(string $id): User
     {
-        return $this->userRepository
+        $user = $this->userRepository
             ->find($id);
+
+        if (!$user instanceof User) {
+            throw new UserNotFoundException();
+        }
+
+        return $user;
     }
 
     public function create(array $userParams): User

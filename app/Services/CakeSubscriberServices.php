@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\CakeSubscriber\CakeUserAlreadySubscribedException;
 use App\Jobs\SendingCakeSubscriptionNotification;
 use App\Models\CakeSubscriber;
 use App\Repositories\CakeSubscriberRepository\CakeSubscriberRepositoryInterface;
@@ -27,7 +28,7 @@ class CakeSubscriberServices
             ]);
 
         if ($userAlreadySubscriber) {
-            throw new \Exception('User already subscriber');
+            throw new CakeUserAlreadySubscribedException();
         }
 
         $cakeSubscriber = $this->cakeSubscriberRepository->create([
