@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCakeRequest;
+use App\Http\Requests\UpdateCakeRequest;
+use App\Services\CakeServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-
-use App\Services\CakeServices;
-use App\Http\Requests\StoreCakeRequest;
-use App\Http\Requests\UpdateCakeRequest;
 
 class CakeController extends Controller
 {
     public function __construct(
         private readonly CakeServices $cakeServices,
-    ) {}
+    ) {
+    }
 
     public function index(Request $request): JsonResponse
     {

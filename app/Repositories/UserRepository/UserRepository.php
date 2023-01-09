@@ -17,7 +17,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     {
         $queryBuilder = User::query();
 
-        if (!empty($params['name'])) {
+        if (! empty($params['name'])) {
             $queryBuilder->orWhere(
                 column: 'name',
                 operator: 'like',

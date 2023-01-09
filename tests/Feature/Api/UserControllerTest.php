@@ -3,10 +3,10 @@
 namespace Tests\Feature\Api;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
-use Illuminate\Http\Response;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserControllerTest extends TestCase
 {
@@ -35,14 +35,13 @@ class UserControllerTest extends TestCase
                     'prev_page_url',
                     'to',
                 ])
-                ->has('data.0', fn ($json) =>
-                    $json->hasAll([
-                        'id',
-                        'name',
-                        'email',
-                        'created_at',
-                        'updated_at',
-                    ])
+                ->has('data.0', fn ($json) => $json->hasAll([
+                    'id',
+                    'name',
+                    'email',
+                    'created_at',
+                    'updated_at',
+                ])
                 )
             );
     }
@@ -51,7 +50,7 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory(1)->createOne();
 
-        $response = $this->getJson(uri: self::BASE_URI . '/' . $user->id);
+        $response = $this->getJson(uri: self::BASE_URI.'/'.$user->id);
 
         $response->assertStatus(status: Response::HTTP_OK);
 
@@ -110,7 +109,7 @@ class UserControllerTest extends TestCase
             'email' => fake()->email,
         ];
 
-        $response = $this->put(uri: self::BASE_URI . '/'. $user['id'], data: $createCakeRequestParams);
+        $response = $this->put(uri: self::BASE_URI.'/'.$user['id'], data: $createCakeRequestParams);
 
         $response->assertStatus(status: Response::HTTP_OK);
     }
@@ -119,7 +118,7 @@ class UserControllerTest extends TestCase
     {
         $user = User::factory(1)->createOne();
 
-        $response = $this->delete(uri: self::BASE_URI . '/'. $user['id']);
+        $response = $this->delete(uri: self::BASE_URI.'/'.$user['id']);
 
         $response->assertStatus(status: Response::HTTP_NO_CONTENT);
     }

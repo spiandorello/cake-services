@@ -9,7 +9,8 @@ class CakeSubscriberController extends Controller
 {
     public function __construct(
         private readonly CakeSubscriberServices $cakeSubscriberServices,
-    ) {}
+    ) {
+    }
 
     public function subscribe(string $userId, string $cakeId): JsonResponse
     {

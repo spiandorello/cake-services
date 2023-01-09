@@ -17,7 +17,8 @@ class SendingCakeSubscriptionNotification implements ShouldQueue
     public function __construct(
         public readonly string $userId,
         public readonly string $cakeId,
-    ) {}
+    ) {
+    }
 
     public function handle(): void
     {
@@ -25,7 +26,8 @@ class SendingCakeSubscriptionNotification implements ShouldQueue
             Mail::to('eduardo.spiandorello@gmail.com')
                 ->send(new CakeSubscription());
         } catch (\Exception $exc) {
-            var_dump($exc->getMessage());die;
+            var_dump($exc->getMessage());
+            exit;
         }
     }
 }

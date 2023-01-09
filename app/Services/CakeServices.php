@@ -9,7 +9,8 @@ class CakeServices
 {
     public function __construct(
         private readonly CakeRepositoryInterface $cakeRepository,
-    ) {}
+    ) {
+    }
 
     public function list(array $queryParams = [])
     {

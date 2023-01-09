@@ -17,7 +17,7 @@ class CakeRepository extends AbstractRepository implements CakeRepositoryInterfa
     {
         $queryBuilder = Cake::query();
 
-        if (!empty($params['name'])) {
+        if (! empty($params['name'])) {
             $queryBuilder->orWhere(
                 column: 'name',
                 operator: 'like',

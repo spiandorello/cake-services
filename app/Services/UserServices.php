@@ -9,7 +9,8 @@ class UserServices
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository,
-    ) {}
+    ) {
+    }
 
     public function list(array $queryParams = [])
     {

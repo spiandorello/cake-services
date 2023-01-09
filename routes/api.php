@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\CakeController;
+use App\Http\Controllers\CakeSubscriberController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\{CakeController, UserController, CakeSubscriberController};
 
 Route::resource(name: 'users', controller: UserController::class);
 Route::resource(name: 'cakes', controller: CakeController::class);

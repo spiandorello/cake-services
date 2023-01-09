@@ -10,7 +10,8 @@ class CakeSubscriberServices
     public function __construct(
         private readonly UserServices $userServices,
         private readonly CakeServices $cakeServices,
-    ) {}
+    ) {
+    }
 
     public function subscribe(string $userId, string $cakeId)
     {
