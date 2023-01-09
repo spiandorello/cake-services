@@ -7,7 +7,6 @@ use App\Models\CakeSubscriber;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class CakeSubscriberControllerTest extends TestCase

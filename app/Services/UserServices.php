@@ -38,7 +38,8 @@ class UserServices
             $cake->$key = $value;
         }
 
-        $cake->save();
+        $this->userRepository
+            ->flush($cake);
 
         return $cake;
     }
@@ -47,6 +48,7 @@ class UserServices
     {
         $cake = $this->listOne($id);
 
-        return $cake->delete();
+        return $this->userRepository
+            ->delete($cake);
     }
 }

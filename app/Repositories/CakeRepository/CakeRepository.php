@@ -4,7 +4,7 @@ namespace App\Repositories\CakeRepository;
 
 use App\Models\Cake;
 use App\Repositories\AbstractRepository;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\AbstractPaginator;
 
 class CakeRepository extends AbstractRepository implements CakeRepositoryInterface
 {
@@ -13,7 +13,7 @@ class CakeRepository extends AbstractRepository implements CakeRepositoryInterfa
         parent::__construct(Cake::class);
     }
 
-    public function list(array $params = []): Builder
+    public function listPaginated(array $params = []): AbstractPaginator
     {
         $queryBuilder = Cake::query();
 
@@ -26,6 +26,8 @@ class CakeRepository extends AbstractRepository implements CakeRepositoryInterfa
         }
 
         return $queryBuilder
-            ->orderBy(column: 'name');
+            ->orderBy(column: 'name')
+            ->simplePaginate($params['limit'] ?? 5)
+            ->withQueryString();
     }
 }

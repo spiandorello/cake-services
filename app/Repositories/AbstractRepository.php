@@ -39,4 +39,14 @@ class AbstractRepository
     {
         return $this->getModel()::create($params);
     }
+
+    public function flush(Model $model): ?bool
+    {
+        return $model->save();
+    }
+
+    public function delete(Model $model): ?bool
+    {
+        return $model->delete();
+    }
 }

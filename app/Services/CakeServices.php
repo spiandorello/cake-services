@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Cake;
 use App\Repositories\CakeRepository\CakeRepositoryInterface;
+use Illuminate\Pagination\AbstractPaginator;
 
 class CakeServices
 {
@@ -12,12 +13,10 @@ class CakeServices
     ) {
     }
 
-    public function list(array $queryParams = [])
+    public function list(array $queryParams = []): AbstractPaginator
     {
         return $this->cakeRepository
-            ->list($queryParams)
-            ->simplePaginate($queryParams['limit'] ?? 5)
-            ->withQueryString();
+            ->listPaginated($queryParams);
     }
 
     public function listOne(string $id): Cake
@@ -40,7 +39,8 @@ class CakeServices
             $cake->$key = $value;
         }
 
-        $cake->save();
+        $this->cakeRepository
+            ->flush($cake);
 
         return $cake;
     }
@@ -49,6 +49,7 @@ class CakeServices
     {
         $cake = $this->listOne($id);
 
-        return $cake->delete();
+        return $this->cakeRepository
+            ->delete($cake);
     }
 }

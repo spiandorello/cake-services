@@ -55,6 +55,7 @@ class CakeSubscriberServices
             throw new \Exception('User doesn\'t subscribed');
         }
 
-        return $cakeSubscriber->delete();
+        return $this->cakeSubscriberRepository
+            ->delete($cakeSubscriber);
     }
 }
