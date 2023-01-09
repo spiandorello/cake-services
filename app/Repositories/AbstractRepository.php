@@ -29,6 +29,12 @@ class AbstractRepository
         return $this->getModel()::findOrFail($id);
     }
 
+    public function findBy(array $params)
+    {
+        return $this->getModel()::where($params)
+            ->first();
+    }
+
     public function create(array $params)
     {
         return $this->getModel()::create($params);

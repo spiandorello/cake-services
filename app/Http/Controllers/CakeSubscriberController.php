@@ -14,16 +14,24 @@ class CakeSubscriberController extends Controller
 
     public function subscribe(string $userId, string $cakeId): JsonResponse
     {
-        $this->cakeSubscriberServices->subscribe(
+        $cakeSubscriber = $this->cakeSubscriberServices->subscribe(
             userId: $userId,
             cakeId: $cakeId,
         );
 
-        return $this->jsonResponse(statusCode: JsonResponse::HTTP_CREATED);
+        return $this->jsonResponse(
+            content: $cakeSubscriber->toArray(),
+            statusCode: JsonResponse::HTTP_CREATED
+        );
     }
 
     public function unsubscribe(string $userId, string $cakeId): JsonResponse
     {
+        $this->cakeSubscriberServices->unsubscribe(
+            userId: $userId,
+            cakeId: $cakeId,
+        );
+
         return $this->jsonResponse();
     }
 }
