@@ -1,34 +1,4 @@
 services:
-#  pay-rabbitmq:
-#    platform: linux/arm64/v8
-#    image: rabbitmq:3-management
-#    container_name: pay-rabbitmq
-#    hostname: pay-rabbitmq
-#    restart: always
-#    tty: true
-#    ports:
-#      - "15672:15672"
-#      - "5672:5672"
-#    environment:
-#      ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
-#      DEFAULT_USER: "guest"
-#      DEFAULT_PASS: "guest"
-#      DEFAULT_VHOST: "/"
-#    networks:
-#      - pay-network
-
-#  pay-redis:
-#    platform: linux/arm64/v8
-#    image: redis:latest
-#    container_name: pay-redis
-#    hostname: pay-redis
-#    restart: always
-#    tty: true
-#    ports:
-#      - "6379:6379"
-#    networks:
-#      - pay-network
-
   cake-mysql:
     platform: linux/x86_64
     image: mysql:8.0.23
