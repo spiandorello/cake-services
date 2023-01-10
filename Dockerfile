@@ -41,10 +41,19 @@ RUN	if [ "$APP_ENV" = "prod" ] && [ -e "composer.json" ]; then \
     fi
 
 FROM php:8.2.1-fpm-alpine AS php8-fpm
+ARG WITH_XDEBUG=true
 
 USER root
 
 WORKDIR /srv/app
+
+RUN apk add --update linux-headers \
+  && apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
+  && pecl install xdebug \
+  && docker-php-ext-enable xdebug \
+  && apk del pcre-dev ${PHPIZE_DEPS}
+
+COPY ./docker/php/xdebug.ini "${PHP_INI_DIR}/conf.d"
 
 RUN docker-php-ext-install \
     pdo \
@@ -53,10 +62,6 @@ RUN docker-php-ext-install \
 
 COPY --chown=www-data . ./
 COPY --chown=www-data --from=composer /srv/app /srv/app
-
-#RUN set -eux; \
-#	mkdir -p var/cache var/log; \
-#	chmod +x bin/console; sync
 
 RUN chown -R www-data:www-data /srv/app
 

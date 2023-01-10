@@ -18,12 +18,8 @@ class CakeSubscriberServicesTest extends TestCase
     public function test_cake_subscribe(): void
     {
         $cakeSubscriber = CakeSubscriber::factory()->make();
-
-        $user = User::factory()->make();
-        $user->id = (Str::uuid())->toString();
-
-        $cake = Cake::factory()->make();
-        $cake->id = (Str::uuid())->toString();
+        $user = User::factory()->createOne();
+        $cake = Cake::factory()->createOne();
 
         $cakeServicesMock = \Mockery::mock(CakeServices::class);
         $cakeServicesMock->shouldReceive('listOne')

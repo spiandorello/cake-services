@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
-use App\Mail\CakeSubscription;
+use App\Services\CakeSubscriberServices;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
 
 class SendingCakeSubscriptionNotification implements ShouldQueue
 {
@@ -20,14 +19,12 @@ class SendingCakeSubscriptionNotification implements ShouldQueue
     ) {
     }
 
-    public function handle(): void
+    public function handle(CakeSubscriberServices $cakeSubscriberServices): void
     {
-        try {
-            Mail::to('eduardo.spiandorello@gmail.com')
-                ->send(new CakeSubscription());
-        } catch (\Exception $exc) {
-            var_dump($exc->getMessage());
-            exit;
-        }
+        $cakeSubscriberServices
+            ->sendNotification(
+                userId: $this->userId,
+                cakeId: $this->cakeId,
+            );
     }
 }

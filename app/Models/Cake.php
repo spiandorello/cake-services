@@ -23,4 +23,9 @@ class Cake extends Model
     {
         return $this->hasMany(CakeSubscriber::class);
     }
+
+    public function hasAvailableCakes(): bool
+    {
+        return $this->getAttribute('available_quantity') > 0;
+    }
 }

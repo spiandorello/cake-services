@@ -42,19 +42,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#      args:
-#        - WITH_XDEBUG=false
-#        - CI_ENV=dev
+      args:
+        - WITH_XDEBUG="true"
     stdin_open: true
     tty: true
+#    extra_hosts:
+#      - host.docker.internal:host-gateway
     volumes:
       - ./:/srv/app
     depends_on:
-#      - pay-rabbitmq
-#      - pay-redis
       - cake-mysql
-#    volumes:
-#      - .:/srv/app
     working_dir: /srv/app
     networks:
       - cake-network

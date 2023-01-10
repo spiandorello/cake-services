@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Exceptions\CakeSubscriber\CakeUserAlreadySubscribedException;
 use App\Jobs\SendingCakeSubscriptionNotification;
+use App\Mail\CakeSubscription;
 use App\Models\CakeSubscriber;
 use App\Repositories\CakeSubscriberRepository\CakeSubscriberRepositoryInterface;
+use Illuminate\Support\Facades\Mail;
 
 class CakeSubscriberServices
 {
@@ -58,5 +60,20 @@ class CakeSubscriberServices
 
         return $this->cakeSubscriberRepository
             ->delete($cakeSubscriber);
+    }
+
+    public function sendNotification(string $userId, string $cakeId): void
+    {
+        $user = $this->userServices->listOne($userId);
+        $cake = $this->cakeServices->listOne($cakeId);
+
+        if ($cake->hasAvailableCakes()) {
+            Mail::to($user['email'])->send(
+                new CakeSubscription(
+                    user: $user,
+                    cake: $cake,
+                ),
+            );
+        }
     }
 }

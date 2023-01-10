@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Cake;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -12,14 +14,18 @@ class CakeSubscription extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct()
-    {
-    }
+    public function __construct(
+        private readonly User $user,
+        private readonly Cake $cake
+    ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Cake Subscription',
+            subject: sprintf(
+                'O bolo %s está disponível!',
+                $this->cake['name'],
+            ),
         );
     }
 
@@ -27,6 +33,12 @@ class CakeSubscription extends Mailable
     {
         return new Content(
             view: 'emails.cake_subscription',
+            with: [
+                'userName' => $this->user['name'],
+                'cakeName' => $this->cake['name'],
+                'cakeDescription' => $this->cake['description'],
+                'cakePrice' => $this->cake['price'],
+            ],
         );
     }
 
