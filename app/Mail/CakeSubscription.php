@@ -17,7 +17,8 @@ class CakeSubscription extends Mailable
     public function __construct(
         private readonly User $user,
         private readonly Cake $cake
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
